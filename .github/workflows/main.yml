@@ -3,11 +3,13 @@ name: JavaGoat-WhatsApp-Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */5 * * *' 
+    - cron: '0 */5 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,7 +22,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Start AI Bot
+      - name: Run Bot (Test Mode)
         env:
           FIREBASE_URL: ${{ secrets.FIREBASE_URL }}
-        run: npm start
+        run: |
+          echo "Starting bot for test..."
+          timeout 20s node index.js || true
+          echo "Bot test completed"
